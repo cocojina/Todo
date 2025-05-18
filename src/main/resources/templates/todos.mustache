@@ -27,6 +27,28 @@
             position: relative;
         }
 
+        .creative-back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.25s ease;
+            margin-bottom: 24px;
+        }
+
+        .creative-back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        }
+
         h1 {
             text-align: center;
             color: #333;
@@ -127,7 +149,8 @@
 <body>
 
 <div class="container">
-    <button type="button" onclick="location.href='/calendar'" style="background:#eee; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-bottom:16px;">뒤로가기</button>
+    <a href="/calendar" class="creative-back-button">🦕 <span>캘린더로 돌아가기</span></a>
+
     <h1>
         {{dateTitle}}
         <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" alt="공룡" class="dino-right">

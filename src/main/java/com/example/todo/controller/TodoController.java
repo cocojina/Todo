@@ -40,7 +40,7 @@ public class TodoController {
         model.addAttribute("dateTitle", formattedDate);
         model.addAttribute("date", date);
         model.addAttribute("todos", todos);
-        return "todosindex"; // 💡 Mustache 파일 이름: resources/templates/todos.mustache
+        return "todos"; // 💡 Mustache 파일 이름: resources/templates/todos.mustache
     }
 
     @PostMapping("/add")

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dino-right {
+            width: 60px;
+            height: auto;
+        }
+
+        form.add-form {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .add-form input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .add-form button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-form button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .todo-text.done {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+
+        .todo-text {
+            flex-grow: 1;
+            font-size: 16px;
+        }
+
+        .actions form {
+            display: inline;
+        }
+
+        .actions button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            margin-left: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .actions button:hover {
+            background-color: #1976D2;
+        }
+
+        .actions .delete-btn {
+            background-color: #f44336;
+        }
+
+        .actions .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button type="button" onclick="location.href='/calendar'" style="background:#eee; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-bottom:16px;">뒤로가기</button>
+    <h1>
+        {{dateTitle}}
+        <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" alt="공룡" class="dino-right">
+    </h1>
+
+    <form action="/todos/add" method="post" class="add-form">
+        <input type="hidden" name="date" value="{{date}}">
+        <input type="text" name="title" placeholder="할 일을 입력하세요" required>
+        <button type="submit">추가</button>
+    </form>
+
+    <ul>
+        {{#todos}}
+            <li>
+                <span class="todo-text {{#completed}}done{{/completed}}">{{title}}</span>
+                <div class="actions">
+                    <form action="/todos/toggle/{{id}}" method="post">
+                        <input type="hidden" name="date" value="{{date}}">
+                        <button type="submit">완료</button>
+                    </form>
+                    <form action="/todos/delete/{{id}}" method="post">
+                        <input type="hidden" name="date" value="{{date}}">
+                        <button type="submit" class="delete-btn">삭제</button>
+                    </form>
+                </div>
+            </li>
+        {{/todos}}
+    </ul>
+</div>
+
+</body>
+</html>

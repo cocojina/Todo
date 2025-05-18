@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Calender</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .calendar-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border: none;
+        }
+        .calendar-table th, .calendar-table td {
+            width: 14%;
+            height: 120px;
+            text-align: left;
+            vertical-align: top;
+            padding: 4px 4px 2px 6px;
+            border: 1px solid #cccccc;
+        }
+        .calendar-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .calendar-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+            width: 100%;
+            transition: background 0.2s, color 0.2s;
+        }
+        .today {
+            background: rgba(255, 224, 102, 0.7) !important;
+        }
+        .calendar-link:hover {
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-light p-4">
+<div class="container w-50">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/calendar?year={{prevYear}}&month={{prevMonth}}" class="btn btn-outline-secondary">← 이전달</a>
+        <h3 class="m-0 text-center">{{year}}년 {{month}}월</h3>
+        <a href="/calendar?year={{nextYear}}&month={{nextMonth}}" class="btn btn-outline-secondary">다음달 →</a>
+    </div>
+
+    <table class="calendar-table mb-4">
+        <thead>
+        <tr>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+            <th class="text-primary">토</th>
+            <th class="text-danger">일</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#calendarRows}}
+            <tr>
+                {{#this}}
+                    <td>
+                        {{#day}}
+                            <a href="/todos?date={{date}}"
+                            class="calendar-link d-block h-100 w-100
+                            style="text-decoration: none; color: inherit;">
+                            <div class="{{#isToday}}today{{/isToday}} {{^isToday}}btn-outline-primary{{/isToday}}" style="font-weight: bold; font-size: 16px; margin-bottom: 2px; display: inline-block; padding-bottom: 2px;">
+                                {{day}}
+                            </div>
+                            <div style="max-height: 70px; overflow-y: auto;">
+                                {{#todos}}
+                                    <div style="font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                        • {{title}}
+                                    </div>
+                                {{/todos}}
+                            </div>
+                            </a>
+                        {{/day}}
+                    </td>
+                {{/this}}
+            </tr>
+        {{/calendarRows}}
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findByDate(LocalDate date);
+    List<Todo> findByDateBetween(LocalDate start, LocalDate end);
 }

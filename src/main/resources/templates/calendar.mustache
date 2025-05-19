@@ -5,6 +5,35 @@
     <title>Calender</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .sidebar-fixed {
+            position: fixed;
+            top: 60px;
+            left: 40px;
+            width: 260px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 24px 18px;
+            z-index: 10;
+        }
+        .calendar-center-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .calendar-container {
+            min-width: 600px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 32px 32px 24px 32px;
+            margin: 40px 400px;
+        }
         .calendar-table {
             width: 100%;
             table-layout: fixed;
@@ -38,57 +67,93 @@
             opacity: 0.5;
             transition: opacity 0.2s;
         }
+        @media (max-width: 900px) {
+            .sidebar-fixed {
+                display: none;
+            }
+            .calendar-container {
+                min-width: 320px;
+                padding: 12px 2vw;
+            }
+        }
     </style>
 </head>
-<body class="bg-light p-4">
-<div class="container w-50">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="/calendar?year={{prevYear}}&month={{prevMonth}}" class="btn btn-outline-secondary">← 이전달</a>
-        <h3 class="m-0 text-center">{{year}}년 {{month}}월</h3>
-        <a href="/calendar?year={{nextYear}}&month={{nextMonth}}" class="btn btn-outline-secondary">다음달 →</a>
+<body>
+<!-- 왼쪽 고정 UI -->
+<div class="sidebar-fixed">
+    <h5>{{month}}월 통계</h5>
+    <ul class="mb-4">
+        <li>이번 달 완료: <span>{{monthlyCompleted}}</span>개</li>
+        <li>이번 달 미완료: <span>{{monthlyUncompleted}}</span>개</li>
+    </ul>
+    <div class="d-grid gap-2 mb-2">
+        <button id="toggleTodosBtn" class="btn btn-outline-secondary btn-sm">할 일 숨기기</button>
+        <form action="/todos/deleteAllMonth" method="post">
+            <input type="hidden" name="year" value="{{year}}">
+            <input type="hidden" name="month" value="{{month}}">
+            <button type="submit" class="btn btn-danger btn-sm w-100">모두 삭제</button>
+        </form>
     </div>
+</div>
 
-    <table class="calendar-table mb-4">
-        <thead>
-        <tr>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th class="text-primary">토</th>
-            <th class="text-danger">일</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#calendarRows}}
+<!-- 캘린더 -->
+<div class="calendar-center-wrap">
+    <div class="calendar-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/calendar?year={{prevYear}}&month={{prevMonth}}" class="btn btn-outline-secondary btn-sm">← 이전달</a>
+            <h3 class="m-0 text-center">{{year}}년 {{month}}월</h3>
+            <a href="/calendar?year={{nextYear}}&month={{nextMonth}}" class="btn btn-outline-secondary btn-sm">다음달 →</a>
+        </div>
+        <table class="calendar-table mb-4">
+            <thead>
             <tr>
-                {{#this}}
-                    <td>
-                        {{#day}}
-                            <a href="/todos?date={{date}}"
-                            class="calendar-link d-block h-100 w-100
-                            style="text-decoration: none; color: inherit;">
-                            <div class="{{#isToday}}today{{/isToday}} {{^isToday}}btn-outline-primary{{/isToday}}" style="font-weight: bold; font-size: 16px; margin-bottom: 2px; display: inline-block; padding-bottom: 2px;">
-                                {{day}}
-                            </div>
-                            <div style="max-height: 70px; overflow-y: auto;">
-                                {{#todos}}
-                                    <div style="font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                        • {{title}}
-                                    </div>
-                                {{/todos}}
-                            </div>
-                            </a>
-                        {{/day}}
-                    </td>
-                {{/this}}
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th class="text-primary">토</th>
+                <th class="text-danger">일</th>
             </tr>
-        {{/calendarRows}}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+            {{#calendarRows}}
+                <tr>
+                    {{#this}}
+                        <td>
+                            {{#day}}
+                                <a href="/todos?date={{date}}" class="calendar-link d-block h-100 w-100">
+                                <div class="{{#isToday}}today{{/isToday}}{{^isToday}}btn-outline-primary{{/isToday}}"
+                                     style="font-weight: bold; font-size: 16px; margin-bottom: 2px; display: inline-block; padding-bottom: 2px;">
+                                    {{day}}
+                                </div>
+                                <div class="todos-list" style="max-height: 70px; overflow-y: auto;">
+                                    {{#todos}}
+                                        <div style="font-size:12px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                            • <span>{{title}}</span>
+                                        </div>
+                                    {{/todos}}
+                                </div>
+                                </a>
+                            {{/day}}
+                        </td>
+                    {{/this}}
+                </tr>
+            {{/calendarRows}}
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
+<script>
+    const toggleBtn = document.getElementById('toggleTodosBtn');
+    let todosVisible = true;
+    toggleBtn.addEventListener('click', function() {
+        todosVisible = !todosVisible;
+        document.querySelectorAll('.todos-list').forEach(el => {
+            el.style.display = todosVisible ? '' : 'none';
+        });
+        toggleBtn.textContent = todosVisible ? '할 일 숨기기' : '할 일 보이기';
+    });
+</script>
 </html>

@@ -66,4 +66,13 @@ public class TodoController {
         todoRepository.deleteById(id);
         return "redirect:/todos?date=" + date;
     }
+
+    @PostMapping("/deleteAllMonth")
+    public String deleteAllByMonth(@RequestParam("year") int year, @RequestParam("month") int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        List<Todo> todos = todoRepository.findByDateBetween(start, end);
+        todoRepository.deleteAll(todos);
+        return "redirect:/calendar?year=" + year + "&month=" + month;
+    }
 }

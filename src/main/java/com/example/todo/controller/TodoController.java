@@ -1,5 +1,6 @@
 package com.example.todo.controller;
 
+import com.example.todo.dto.TodoDto;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +29,6 @@ public class TodoController {
         LocalDate parsedDate = LocalDate.parse(date);
         List<Todo> todos = todoRepository.findByDate(parsedDate);
 
-        log.info("date {}", parsedDate);
-        for (Todo todo : todos) {
-            log.info("Todo - id: {}, title: {}, completed: {}, date: {}",
-                    todo.getId(), todo.getTitle(), todo.isCompleted(), todo.getDate());
-        }
 
         String formattedDate = String.format("%d년 %d월 %d일 할 일",
                 parsedDate.getYear(), parsedDate.getMonthValue(), parsedDate.getDayOfMonth());
@@ -45,13 +41,15 @@ public class TodoController {
     }
 
     @PostMapping("/add")
-    public String addTodo(@RequestParam("title") String title, @RequestParam("date") String date) {
-        todoRepository.save(Todo.builder()
-                .title(title)
+    public String addTodo(@RequestParam("task") String task, @RequestParam("date") String date) {
+        TodoDto todoDto = TodoDto.builder()
+                .task(task)
                 .completed(false)
                 .date(LocalDate.parse(date))
-                .build());
+                .build();
+        todoRepository.save(todoDto.toEntity());
         return "redirect:/todos?date=" + date;
+
     }
 
     @PostMapping("/toggle/{id}")
@@ -64,16 +62,20 @@ public class TodoController {
 
     @PostMapping("/delete/{id}")
     public String deleteTodo(@PathVariable("id") Long id, @RequestParam("date") String date) {
-        todoRepository.deleteById(id);
+        Todo target = todoRepository.findById(id).orElse(null);
+        if( target != null) {
+            todoRepository.deleteById(id);
+        }
         return "redirect:/todos?date=" + date;
+
     }
 
     @PostMapping("/update/{id}")
     public String updateTodo(@PathVariable("id") Long id,
-                             @RequestParam("title") String title,
+                             @RequestParam("task") String task,
                              @RequestParam("date") String date) {
         Todo todo = todoRepository.findById(id).orElseThrow();
-        todo.setTitle(title);
+        todo.setTask(task);
         todoRepository.save(todo);
         return "redirect:/todos?date=" + date;
     }

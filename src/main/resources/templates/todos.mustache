@@ -194,7 +194,7 @@
 
     <form action="/todos/add" method="post" class="add-form">
         <input type="hidden" name="date" value="{{date}}" />
-        <input type="text" name="title" placeholder="할 일을 입력하세요" required />
+        <input type="text" name="task" placeholder="할 일을 입력하세요" required />
 
 
 
@@ -213,8 +213,8 @@
                     <input type="hidden" name="date" value="{{date}}" />
                     <input
                             type="text"
-                            name="title"
-                            value="{{title}}"
+                            name="task"
+                            value="{{task}}"
                             class="todo-text {{#completed}}done{{/completed}}"
                             readonly
                             required
@@ -244,7 +244,7 @@
     document.querySelectorAll('.edit-form').forEach((form) => {
         const editBtn = form.querySelector('.edit-btn');
         const saveBtn = form.querySelector('.save-btn');
-        const input = form.querySelector('input[name="title"]');
+        const input = form.querySelector('input[name="task"]');
 
         editBtn.addEventListener('click', () => {
             input.readOnly = false;

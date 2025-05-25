@@ -40,6 +40,7 @@ public class TodoController {
         model.addAttribute("dateTitle", formattedDate);
         model.addAttribute("date", date);
         model.addAttribute("todos", todos);
+
         return "todos"; // 💡 Mustache 파일 이름: resources/templates/todos.mustache
     }
 
@@ -67,6 +68,17 @@ public class TodoController {
         return "redirect:/todos?date=" + date;
     }
 
+
+    // ✅ [2] 수정 처리
+    @PostMapping("/update/{id}")
+    public String updateTodo(@PathVariable("id") Long id,
+                             @RequestParam("title") String title,
+                             @RequestParam("date") String date) {
+        Todo todo = todoRepository.findById(id).orElseThrow();
+        todo.setTitle(title);
+        todoRepository.save(todo);
+        return "redirect:/todos?date=" + date;
+      
     @PostMapping("/deleteAllMonth")
     public String deleteAllByMonth(@RequestParam("year") int year, @RequestParam("month") int month) {
         LocalDate start = LocalDate.of(year, month, 1);
@@ -74,5 +86,6 @@ public class TodoController {
         List<Todo> todos = todoRepository.findByDateBetween(start, end);
         todoRepository.deleteAll(todos);
         return "redirect:/calendar?year=" + year + "&month=" + month;
+
     }
 }

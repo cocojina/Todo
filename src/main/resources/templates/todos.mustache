@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
+
+    <meta charset="UTF-8" />
     <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         * {
             box-sizing: border-box;
@@ -16,15 +19,36 @@
             display: flex;
             justify-content: center;
         }
-
         .container {
             background-color: white;
             padding: 30px 40px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
             width: 100%;
             max-width: 600px;
             position: relative;
+        }
+
+        .creative-back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.25s ease;
+            margin-bottom: 24px;
+        }
+        .creative-back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
         }
 
         h1 {
@@ -64,8 +88,9 @@
             font-size: 16px;
             border-radius: 6px;
             cursor: pointer;
-        }
 
+            transition: background-color 0.3s ease;
+        }
         .add-form button:hover {
             background-color: #45a049;
         }
@@ -94,68 +119,142 @@
         .todo-text {
             flex-grow: 1;
             font-size: 16px;
-        }
-
-        .actions form {
-            display: inline;
-        }
-
-        .actions button {
-            background-color: #2196F3;
-            color: white;
             border: none;
-            padding: 6px 12px;
-            margin-left: 5px;
-            border-radius: 4px;
+            background: transparent;
+            color: inherit;
+            outline: none;
+            height: 36px; /* 버튼 높이에 맞춤 */
+            line-height: 36px;
+            padding-left: 4px;
+
+            /* 추가된 부분 */
+            overflow-x: auto;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        /* 수정폼 */
+        form.edit-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        /* 버튼 기본 스타일 - 배경없고 아이콘만 */
+        button.edit-btn,
+        button.save-btn,
+        .actions button {
+            background: none;
+            border: none;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            transition: color 0.3s ease;
+            line-height: 1;
         }
-
-        .actions button:hover {
-            background-color: #1976D2;
+        button.edit-btn:hover,
+        button.save-btn:hover {
+            color: #007bff;
         }
-
+        .actions button[title="완료"] {
+            color: #28a745;
+        }
+        .actions button[title="완료"]:hover {
+            color: #1e7e34;
+        }
         .actions .delete-btn {
-            background-color: #f44336;
+            color: #dc3545;
         }
-
         .actions .delete-btn:hover {
-            background-color: #d32f2f;
+            color: #a71d2a;
+        }
+        /* 버튼 아이콘 클릭 안되게 */
+        button i {
+            pointer-events: none;
+
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <a href="/calendar" class="creative-back-button">🦕 <span>캘린더로 돌아가기</span></a>
+
     <h1>
         {{dateTitle}}
-        <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" alt="공룡" class="dino-right">
+        <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" alt="공룡" class="dino-right" />
     </h1>
 
     <form action="/todos/add" method="post" class="add-form">
-        <input type="hidden" name="date" value="{{date}}">
-        <input type="text" name="title" placeholder="할 일을 입력하세요" required>
+        <input type="hidden" name="date" value="{{date}}" />
+        <input type="text" name="title" placeholder="할 일을 입력하세요" required />
+
+
+
         <button type="submit">추가</button>
     </form>
 
     <ul>
         {{#todos}}
-            <li>
-                <span class="todo-text {{#completed}}done{{/completed}}">{{title}}</span>
-                <div class="actions">
-                    <form action="/todos/toggle/{{id}}" method="post">
-                        <input type="hidden" name="date" value="{{date}}">
-                        <button type="submit">완료</button>
+
+            <li data-id="{{id}}" data-date="{{date}}">
+                <form
+                        action="/todos/update/{{id}}"
+                        method="post"
+                        class="edit-form"
+                >
+                    <input type="hidden" name="date" value="{{date}}" />
+                    <input
+                            type="text"
+                            name="title"
+                            value="{{title}}"
+                            class="todo-text {{#completed}}done{{/completed}}"
+                            readonly
+                            required
+                    />
+                    <button type="button" class="edit-btn" title="수정"><i class="fas fa-pen"></i></button>
+                    <button type="submit" class="save-btn" title="저장" style="display: none"><i class="fas fa-save"></i></button>
+                </form>
+
+                <div class="actions" style="margin-left: 8px; display: flex; gap: 8px;">
+                    <form action="/todos/toggle/{{id}}" method="post" style="margin: 0;">
+                        <input type="hidden" name="date" value="{{date}}" />
+                        <button type="submit" title="완료"><i class="fas fa-check"></i></button>
                     </form>
-                    <form action="/todos/delete/{{id}}" method="post">
-                        <input type="hidden" name="date" value="{{date}}">
-                        <button type="submit" class="delete-btn">삭제</button>
+                    <form action="/todos/delete/{{id}}" method="post" style="margin: 0;">
+                        <input type="hidden" name="date" value="{{date}}" />
+                        <button type="submit" class="delete-btn" title="삭제"><i class="fas fa-trash"></i></button>
+
                     </form>
                 </div>
             </li>
         {{/todos}}
     </ul>
 </div>
+
+
+<script>
+    document.querySelectorAll('.edit-form').forEach((form) => {
+        const editBtn = form.querySelector('.edit-btn');
+        const saveBtn = form.querySelector('.save-btn');
+        const input = form.querySelector('input[name="title"]');
+
+        editBtn.addEventListener('click', () => {
+            input.readOnly = false;
+            input.focus();
+
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'flex';
+        });
+    });
+</script>
 
 </body>
 </html>

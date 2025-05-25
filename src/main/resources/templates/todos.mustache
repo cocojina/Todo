@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
     <meta charset="UTF-8" />
     <title>Todo List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         * {
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
@@ -20,11 +23,13 @@
             background-color: white;
             padding: 30px 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
             width: 100%;
             max-width: 600px;
             position: relative;
         }
+
         .creative-back-button {
             display: inline-flex;
             align-items: center;
@@ -45,6 +50,7 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
             background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
         }
+
         h1 {
             text-align: center;
             color: #333;
@@ -54,14 +60,17 @@
             align-items: center;
             gap: 10px;
         }
+
         .dino-right {
             width: 60px;
             height: auto;
         }
+
         form.add-form {
             display: flex;
             margin-bottom: 20px;
         }
+
         .add-form input[type="text"] {
             flex-grow: 1;
             padding: 10px;
@@ -69,24 +78,28 @@
             border: 1px solid #ccc;
             font-size: 16px;
         }
+
         .add-form button {
             margin-left: 10px;
             padding: 10px 20px;
-            background-color: #4caf50;
+            background-color: #4CAF50;
             border: none;
             color: white;
             font-size: 16px;
             border-radius: 6px;
             cursor: pointer;
+
             transition: background-color 0.3s ease;
         }
         .add-form button:hover {
             background-color: #45a049;
         }
+
         ul {
             list-style: none;
             padding: 0;
         }
+
         li {
             background-color: #fafafa;
             border: 1px solid #ddd;
@@ -97,10 +110,12 @@
             align-items: center;
             justify-content: space-between;
         }
+
         .todo-text.done {
             text-decoration: line-through;
             color: #aaa;
         }
+
         .todo-text {
             flex-grow: 1;
             font-size: 16px;
@@ -163,10 +178,12 @@
         /* 버튼 아이콘 클릭 안되게 */
         button i {
             pointer-events: none;
+
         }
     </style>
 </head>
 <body>
+
 <div class="container">
     <a href="/calendar" class="creative-back-button">🦕 <span>캘린더로 돌아가기</span></a>
 
@@ -178,11 +195,15 @@
     <form action="/todos/add" method="post" class="add-form">
         <input type="hidden" name="date" value="{{date}}" />
         <input type="text" name="title" placeholder="할 일을 입력하세요" required />
+
+
+
         <button type="submit">추가</button>
     </form>
 
     <ul>
         {{#todos}}
+
             <li data-id="{{id}}" data-date="{{date}}">
                 <form
                         action="/todos/update/{{id}}"
@@ -210,12 +231,14 @@
                     <form action="/todos/delete/{{id}}" method="post" style="margin: 0;">
                         <input type="hidden" name="date" value="{{date}}" />
                         <button type="submit" class="delete-btn" title="삭제"><i class="fas fa-trash"></i></button>
+
                     </form>
                 </div>
             </li>
         {{/todos}}
     </ul>
 </div>
+
 
 <script>
     document.querySelectorAll('.edit-form').forEach((form) => {
@@ -232,5 +255,6 @@
         });
     });
 </script>
+
 </body>
 </html>

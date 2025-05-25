@@ -62,6 +62,16 @@ public class CalendarController {
             calendarRows.add(calendar.subList(i, Math.min(i + 7, calendar.size())));
         }
 
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        List<Todo> todos = todoRepository.findByDateBetween(start, end);
+
+        long monthlyCompleted = todos.stream().filter(Todo::isCompleted).count();
+        long monthlyUncompleted = todos.stream().filter(t -> !t.isCompleted()).count();
+
+        model.addAttribute("monthlyCompleted", monthlyCompleted);
+        model.addAttribute("monthlyUncompleted", monthlyUncompleted);
+
         LocalDate prevMonth = firstDay.minusMonths(1);
         LocalDate nextMonth = firstDay.plusMonths(1);
 

@@ -68,8 +68,6 @@ public class TodoController {
         return "redirect:/todos?date=" + date;
     }
 
-
-    // ✅ [2] 수정 처리
     @PostMapping("/update/{id}")
     public String updateTodo(@PathVariable("id") Long id,
                              @RequestParam("title") String title,
@@ -78,14 +76,19 @@ public class TodoController {
         todo.setTitle(title);
         todoRepository.save(todo);
         return "redirect:/todos?date=" + date;
-      
+    }
+
     @PostMapping("/deleteAllMonth")
     public String deleteAllByMonth(@RequestParam("year") int year, @RequestParam("month") int month) {
+        // 경고
+        log.warn("Deleting all todos for year: {}, month: {}", year, month);
+
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
         List<Todo> todos = todoRepository.findByDateBetween(start, end);
         todoRepository.deleteAll(todos);
-        return "redirect:/calendar?year=" + year + "&month=" + month;
 
+
+        return "redirect:/calendar?year=" + year + "&month=" + month;
     }
 }

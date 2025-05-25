@@ -91,7 +91,7 @@
         <form action="/todos/deleteAllMonth" method="post">
             <input type="hidden" name="year" value="{{year}}">
             <input type="hidden" name="month" value="{{month}}">
-            <button type="submit" class="btn btn-danger btn-sm w-100">모두 삭제</button>
+            <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('정말로 이번 달의 모든 할 일을 삭제하시겠습니까?');">모두 삭제</button>
         </form>
     </div>
 </div>
